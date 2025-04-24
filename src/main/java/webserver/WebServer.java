@@ -18,6 +18,8 @@ import webserver.session.SessionManager;
 public class WebServer {
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
+    private static final String SCHEMA_SQL = "schema.sql";
+    private static final String DATA_SQL = "data.sql";
 
     public static void main(String[] args) throws Exception {
         int port = 0;
@@ -27,7 +29,8 @@ public class WebServer {
             port = Integer.parseInt(args[0]);
         }
 
-        initSchema();
+        initData(SCHEMA_SQL);
+        initData(DATA_SQL);
         SessionManager.getInstance();
         HandlerMapper handlerMapper = HandlerMapper.getInstance();
         handlerMapper.initialize();
@@ -45,10 +48,10 @@ public class WebServer {
         }
     }
 
-    private static void initSchema() throws SQLException, IOException {
+    private static void initData(String filename) throws SQLException, IOException {
         try (var conn = ConnectionManager.getConnection();
              var stmt = conn.createStatement();
-             var is = WebServer.class.getClassLoader().getResourceAsStream("schema.sql");
+             var is = WebServer.class.getClassLoader().getResourceAsStream(filename);
              var rd = new BufferedReader(new InputStreamReader(is))) {
             String sql = "", line;
             while ((line = rd.readLine()) != null) {
