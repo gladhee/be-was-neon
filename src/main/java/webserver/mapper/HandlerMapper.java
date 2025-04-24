@@ -2,6 +2,7 @@ package webserver.mapper;
 
 import handler.Article.ArticleHandler;
 import handler.Handler;
+import handler.user.UserHandler;
 import webserver.annotation.RequestMapping;
 import webserver.http.common.HttpMethod;
 import webserver.http.common.HttpSession;
@@ -40,6 +41,7 @@ public class HandlerMapper {
 
     public void initialize() {
         registerController(new Handler());
+        registerController(new UserHandler());
         registerController(new ArticleHandler());
     }
 
