@@ -17,7 +17,8 @@ public class ArticleDao {
     private static final Logger logger = LoggerFactory.getLogger(ArticleDao.class);
     private static final ArticleDao INSTANCE = new ArticleDao();
 
-    private ArticleDao() {}
+    private ArticleDao() {
+    }
 
     public static ArticleDao getInstance() {
         return INSTANCE;
@@ -40,6 +41,38 @@ public class ArticleDao {
         return Optional.empty();
     }
 
+    public long findMaxId() {
+        String sql = "SELECT MAX(id) FROM articles";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            logger.error("findMaxId() 실패: SQL=\"{}\"", sql, e);
+            throw new HttpException(INTERNAL_SERVER_ERROR);
+        }
+        return 0;
+    }
+
+    public boolean existsById(long id) {
+        String sql = "SELECT COUNT(*) FROM articles WHERE id = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("existsById() 실패: id={}, SQL=\"{}\"", id, sql, e);
+            throw new HttpException(INTERNAL_SERVER_ERROR);
+        }
+        return false;
+    }
+
     public List<Article> findAllByUserName(String userName) {
         String sql = "SELECT id, content, user_name FROM articles WHERE user_name = ?";
         List<Article> list = new ArrayList<>();
@@ -53,25 +86,6 @@ public class ArticleDao {
             }
         } catch (SQLException e) {
             logger.error("findAllByUserId() 실패: userName={}, SQL=\"{}\"", userName, sql, e);
-            throw new HttpException(INTERNAL_SERVER_ERROR);
-        }
-        return list;
-    }
-
-    /**
-     * 모든 게시글 조회
-     */
-    public List<Article> findAll() {
-        String sql = "SELECT id, content, user_name FROM articles";
-        List<Article> list = new ArrayList<>();
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                list.add(mapRowToArticle(rs));
-            }
-        } catch (SQLException e) {
-            logger.error("findAll() 실패: SQL=\"{}\"", sql, e);
             throw new HttpException(INTERNAL_SERVER_ERROR);
         }
         return list;
@@ -93,34 +107,6 @@ public class ArticleDao {
             logger.error("save() 실패: article={}, SQL=\"{}\"", article, sql, e);
             throw new HttpException(INTERNAL_SERVER_ERROR);
         }
-    }
-
-    public void deleteById(long id) {
-        String sql = "DELETE FROM articles WHERE id = ?";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("deleteById() 실패: id={}, SQL=\"{}\"", id, sql, e);
-            throw new HttpException(INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    public int count() {
-        String sql = "SELECT COUNT(*) FROM articles";
-        try (Connection conn = ConnectionManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            logger.error("count() 실패: SQL=\"{}\"", sql, e);
-            throw new HttpException(INTERNAL_SERVER_ERROR);
-        }
-
-        return 0;
     }
 
     // ResultSet → Article 변환

@@ -45,7 +45,7 @@ public class HandlerMapper {
         UserDao userDao = UserDao.getInstance();
         ArticleDao articleDao = ArticleDao.getInstance();
 
-        registerController(new Handler(userDao));
+        registerController(new Handler(userDao, articleDao));
         registerController(new UserHandler(userDao));
         registerController(new ArticleHandler(userDao, articleDao));
     }
