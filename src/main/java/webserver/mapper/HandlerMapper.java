@@ -1,5 +1,6 @@
 package webserver.mapper;
 
+import handler.ArticleHandler;
 import handler.Handler;
 import webserver.annotation.RequestMapping;
 import webserver.http.common.HttpMethod;
@@ -39,6 +40,7 @@ public class HandlerMapper {
 
     public void initialize() {
         registerController(Handler.getInstance());
+        registerController(new ArticleHandler());
     }
 
     private void registerController(Object controller) {
