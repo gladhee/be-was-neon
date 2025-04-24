@@ -18,6 +18,8 @@ import java.io.IOException;
 public class Dispatcher {
 
     private static final Logger logger = LoggerFactory.getLogger(Dispatcher.class);
+    private static final String ERROR_PATH = "/error/";
+    private static final String HTML_EXT = ".html";
     private final HttpRequest request;
 
     public Dispatcher(HttpRequest request) {
@@ -33,7 +35,8 @@ public class Dispatcher {
             return buildHttpResponse(resolveResponse);
         } catch (HttpException e) {
             logger.error("Error during request processing: {}", e.getMessage());
-            ResolveResponse<?> errorResponse = ResolveResponse.status(e.getStatusCode());
+            String errorLocation = ERROR_PATH + e.getStatusCode() + HTML_EXT;
+            ResolveResponse<?> errorResponse = ResolveResponse.redirect(errorLocation);
 
             return buildHttpResponse(errorResponse);
         }
