@@ -24,7 +24,7 @@ public class ArticleDao {
     }
 
     public Optional<Article> findById(long id) {
-        String sql = "SELECT id, content, user_id FROM articles WHERE id = ?";
+        String sql = "SELECT id, content, user_name FROM articles WHERE id = ?";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, id);
@@ -40,19 +40,19 @@ public class ArticleDao {
         return Optional.empty();
     }
 
-    public List<Article> findAllByUserId(String userId) {
-        String sql = "SELECT id, content, user_id FROM articles WHERE user_id = ?";
+    public List<Article> findAllByUserName(String userName) {
+        String sql = "SELECT id, content, user_name FROM articles WHERE user_name = ?";
         List<Article> list = new ArrayList<>();
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
+            ps.setString(1, userName);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapRowToArticle(rs));
                 }
             }
         } catch (SQLException e) {
-            logger.error("findAllByUserId() 실패: userId={}, SQL=\"{}\"", userId, sql, e);
+            logger.error("findAllByUserId() 실패: userName={}, SQL=\"{}\"", userName, sql, e);
             throw new HttpException(INTERNAL_SERVER_ERROR);
         }
         return list;
@@ -62,7 +62,7 @@ public class ArticleDao {
      * 모든 게시글 조회
      */
     public List<Article> findAll() {
-        String sql = "SELECT id, content, user_id FROM articles";
+        String sql = "SELECT id, content, user_name FROM articles";
         List<Article> list = new ArrayList<>();
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -78,11 +78,11 @@ public class ArticleDao {
     }
 
     public void save(Article article) {
-        String sql = "INSERT INTO articles(content, user_id) VALUES(?,?)";
+        String sql = "INSERT INTO articles(content, user_name) VALUES(?,?)";
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, article.getContent());
-            ps.setString(2, article.getUserId());
+            ps.setString(2, article.getUserName());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) {
@@ -107,12 +107,28 @@ public class ArticleDao {
         }
     }
 
+    public int count() {
+        String sql = "SELECT COUNT(*) FROM articles";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            logger.error("count() 실패: SQL=\"{}\"", sql, e);
+            throw new HttpException(INTERNAL_SERVER_ERROR);
+        }
+
+        return 0;
+    }
+
     // ResultSet → Article 변환
     private Article mapRowToArticle(ResultSet rs) throws SQLException {
         long id = rs.getLong("id");
         String content = rs.getString("content");
-        String userId = rs.getString("user_id");
-        return new Article(id, content, userId);
+        String userName = rs.getString("user_name");
+        return new Article(id, content, userName);
     }
 
 }

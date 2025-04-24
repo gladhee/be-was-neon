@@ -4,16 +4,16 @@ public class Article {
 
     private long id;
     private final String content;
-    private final String userId;
+    private final String userName;
 
-    public Article(long id, String content, String userId) {
+    public Article(long id, String content, String userName) {
         this.id = id;
         this.content = content;
-        this.userId = userId;
+        this.userName = userName;
     }
 
-    public Article(String content, String userId) {
-        this(0, content, userId);
+    public Article(String content, String userName) {
+        this(0, content, userName);
     }
 
     public long getId() {
@@ -28,8 +28,8 @@ public class Article {
         return content;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserName() {
+        return userName;
     }
 
 }
