@@ -1,7 +1,7 @@
 package handler;
 
 import handler.user.UserDao;
-import model.User;
+import handler.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.annotation.RequestMapping;

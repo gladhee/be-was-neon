@@ -28,7 +28,7 @@
 
 - `http://localhost:8080/register.html` 접속시 회원가입 폼을 응답
 - Request parameter로 `userId`, `password`, `name`, `email`을 받음
-- 파싱 후 `model.User`클래스에 저장
+- 파싱 후 `handler.user.User`클래스에 저장
 
 ### 품질 개선
 

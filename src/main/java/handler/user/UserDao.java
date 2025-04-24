@@ -1,7 +1,6 @@
 package handler.user;
 
 import db.ConnectionManager;
-import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.http.exception.HttpException;

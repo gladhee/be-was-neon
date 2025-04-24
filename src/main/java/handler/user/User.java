@@ -1,4 +1,4 @@
-package model;
+package handler.user;
 
 public class User {
     private String userId;

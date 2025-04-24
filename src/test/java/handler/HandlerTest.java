@@ -1,7 +1,6 @@
 package handler;
 
-import db.Database;
-import model.User;
+import handler.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

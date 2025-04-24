@@ -1,6 +1,6 @@
 package handler.Article;
 
-import model.User;
+import handler.user.User;
 import webserver.annotation.RequestMapping;
 import webserver.http.common.HttpSession;
 
