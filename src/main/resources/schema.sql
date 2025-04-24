@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS users (
+    id       BIGINT AUTO_INCREMENT PRIMARY KEY,
+    userId   VARCHAR(50),
+    name      VARCHAR(100) NOT NULL,
+    password  VARCHAR(100) NOT NULL,
+    email     VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS articles (
+    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
+    content   VARCHAR(1000) NOT NULL,
+    userId VARCHAR(50) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES users(id)
+);
