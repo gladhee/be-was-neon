@@ -83,10 +83,10 @@ class DispatcherTest {
     }
 
     @Test
-    @DisplayName("POST /create 요청시 유저가 정상적으로 생성되면 302 Found 응답을 반환한다.")
+    @DisplayName("POST /users 요청시 유저가 정상적으로 생성되면 302 Found 응답을 반환한다.")
     void 유저_생성_정상_요청시_302_found_응답을_반환_테스트() throws IOException {
         // given
-        HttpRequest request = RequestBuilder.post("/create")
+        HttpRequest request = RequestBuilder.post("/users")
                 .body("userId=javajigi&name=자바지기&password=test&email=javajigi@naver.com")
                 .build();
         Dispatcher dispatcher = new Dispatcher(request);
@@ -101,13 +101,13 @@ class DispatcherTest {
     }
 
     @Test
-    @DisplayName("POST /create 요청시 유저가 이미 존재하면 409 Conflict 응답을 반환한다.")
+    @DisplayName("POST /users 요청시 유저가 이미 존재하면 409 Conflict 응답을 반환한다.")
     void 중복된_유저_생성_요청시_409_Conflict_반환_테스트() throws IOException {
         // given
         User user = new User("javajigi", "test", "자바지기", "javajigi@naver.com");
         Database.addUser(user);
 
-        HttpRequest request = RequestBuilder.post("/create")
+        HttpRequest request = RequestBuilder.post("/users")
                 .body("userId=javajigi&name=자바지기&password=test&email=javajigi@naver.com")
                 .build();
         Dispatcher newDispatcher = new Dispatcher(request);
@@ -122,10 +122,10 @@ class DispatcherTest {
     }
 
     @Test
-    @DisplayName("POST /create 요청시 파라미터가 부족하거나 잘못된 경우 400 Bad Request 응답을 반환한다.")
+    @DisplayName("POST /users 요청시 파라미터가 부족하거나 잘못된 경우 400 Bad Request 응답을 반환한다.")
     void 잘못된_생성_요청시_400_Bad_Request_반환_테스트() throws IOException {
         // given
-        HttpRequest request = RequestBuilder.post("/create")
+        HttpRequest request = RequestBuilder.post("/users")
                 .body("userId=javajigi&password=")
                 .build();
         Dispatcher dispatcher = new Dispatcher(request);

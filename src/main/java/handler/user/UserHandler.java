@@ -52,7 +52,7 @@ public class UserHandler {
         return "user-list";
     }
 
-    @RequestMapping(method = "POST", path = "/create")
+    @RequestMapping(method = "POST", path = "/users")
     public ResolveResponse<String> createUser(HttpRequest request) {
         logger.debug("getCreate");
         String body = request.getBody();
