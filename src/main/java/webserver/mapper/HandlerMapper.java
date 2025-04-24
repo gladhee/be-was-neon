@@ -2,6 +2,7 @@ package webserver.mapper;
 
 import handler.Article.ArticleHandler;
 import handler.Handler;
+import handler.user.UserDao;
 import handler.user.UserHandler;
 import webserver.annotation.RequestMapping;
 import webserver.http.common.HttpMethod;
@@ -40,8 +41,10 @@ public class HandlerMapper {
     }
 
     public void initialize() {
-        registerController(new Handler());
-        registerController(new UserHandler());
+        UserDao userDao = UserDao.getInstance();
+
+        registerController(new Handler(userDao));
+        registerController(new UserHandler(userDao));
         registerController(new ArticleHandler());
     }
 

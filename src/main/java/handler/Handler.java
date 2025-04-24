@@ -1,6 +1,6 @@
 package handler;
 
-import db.Database;
+import handler.user.UserDao;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +12,15 @@ import webserver.resolver.ResolveResponse;
 import webserver.util.QueryStringParser;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class Handler {
 
     private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+    private final UserDao userDao;
 
-    public Handler() {
+    public Handler(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @RequestMapping(method = "GET", path = "/")
@@ -40,8 +43,9 @@ public class Handler {
         Map<String, String> queryString = QueryStringParser.parse(body);
         String userId = queryString.get("userId");
         String password = queryString.get("password");
-        User user = Database.findUserById(userId);
-        if (user == null) {
+
+        Optional<User> user = userDao.findByUserId(userId);
+        if (user.isEmpty()) {
             logger.debug("User not found: {}", userId);
             return ResolveResponse.redirect("/login/login_failed.html");
         }

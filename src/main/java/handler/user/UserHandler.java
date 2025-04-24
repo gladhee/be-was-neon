@@ -1,6 +1,5 @@
 package handler.user;
 
-import db.Database;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +11,7 @@ import webserver.model.Model;
 import webserver.resolver.ResolveResponse;
 import webserver.util.QueryStringParser;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import static webserver.http.response.HttpStatusCode.BAD_REQUEST;
@@ -21,8 +20,10 @@ import static webserver.http.response.HttpStatusCode.CONFLICT;
 public class UserHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UserHandler.class);
+    private final UserDao userDao;
 
-    public UserHandler() {
+    public UserHandler(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     @RequestMapping(method = "GET", path = "/users")
@@ -33,7 +34,7 @@ public class UserHandler {
             logger.debug("User not logged in");
             return "login";
         }
-        Collection<User> users = Database.findAll();
+        List<User> users = userDao.findAll();
 
         StringBuilder sb = new StringBuilder();
         for (User u : users) {
@@ -63,13 +64,14 @@ public class UserHandler {
         String email = queryString.get("email");
 
         validateNotBlank(userId, name, password, email);
-        if (Database.findUserById(userId) != null) {
+        if (userDao.findByUserId(userId).isPresent()) {
+            logger.debug("users = {}", userDao.findAll());
             logger.debug("User already exists: {}", userId);
             throw new HttpException(CONFLICT);
         }
 
         User user = new User(userId, password, name, email);
-        Database.addUser(user);
+        userDao.save(user);
         logger.debug("User created: {}", user);
         return ResolveResponse.redirect("/");
     }
