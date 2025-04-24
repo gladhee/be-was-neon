@@ -36,8 +36,8 @@ public class UserDao {
                 if (rs.next()) {
                     return Optional.of(new User(
                             rs.getString("user_id"),
-                            rs.getString("name"),
                             rs.getString("password"),
+                            rs.getString("name"),
                             rs.getString("email")
                     ));
                 }
@@ -59,8 +59,8 @@ public class UserDao {
             while (rs.next()) {
                 users.add(new User(
                         rs.getString("user_id"),
-                        rs.getString("name"),
                         rs.getString("password"),
+                        rs.getString("name"),
                         rs.getString("email")
                 ));
             }
