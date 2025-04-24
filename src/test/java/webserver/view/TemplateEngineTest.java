@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import webserver.http.common.HttpSession;
 import webserver.model.Model;
 
-import java.util.Collection;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TemplateEngineTest {
@@ -57,37 +55,25 @@ class TemplateEngineTest {
         User user = new User("javajigi", "test", "자바지기", "javajigi@inop.com");
         session.setAttribute("user", user);
 
-        User user2 = new User("glad", "test", "글래드", "glad@codesquad.com");
-        User user3 = new User("honux", "test", "호눅스", "honux@codesquad.com");
-        Database.addUser(user);
-        Database.addUser(user2);
-        Database.addUser(user3);
+        // 테스트용 가짜 아이템 HTML
+        String sb = """
+                <li class="user-item"><span class="user-name">글래드</span></li>
+                """ + """
+                <li class="user-item"><span class="user-name">호눅스</span></li>
+                """;
+        model.addAttribute("itemsHtml", sb);
 
-        Collection<User> users = Database.findAll();
-        StringBuilder sb = new StringBuilder();
-        for (User u : users) {
-            sb.append("""
-                    <li class="user-item">
-                      <div class="user-avatar"></div>
-                      <div class="user-info">
-                        <span class="user-name">%s</span>
-                        <span class="user-email">%s</span>
-                      </div>
-                    </li>
-                    """.formatted(u.getName(), u.getEmail()));
-        }
-        model.addAttribute("itemsHtml", sb.toString());
+        ModelAndView mav = new ModelAndView(viewName, model);
 
         // when
-        ModelAndView mav = new ModelAndView(viewName, model);
-        TemplateEngine te = new TemplateEngine(mav, session);
-        String result = te.render();
+        TemplateEngine engine = new TemplateEngine(mav, session);
+        String html = engine.render();
 
         // then
-        assertThat(result).contains("자바지기");
-        assertThat(result).contains("글래드");
-        assertThat(result).contains("호눅스");
-        assertThat(result).contains("<html");
+        assertThat(html)
+                .contains("글래드")
+                .contains("호눅스")
+                .contains("<html");
     }
 
 }
