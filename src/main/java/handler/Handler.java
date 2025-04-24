@@ -53,7 +53,7 @@ public class Handler {
             logger.debug("Invalid password for user: {}", userId);
             return ResolveResponse.redirect("/login/login_failed.html");
         }
-        session.setAttribute("user", user);
+        session.setAttribute("user", user.get());
         logger.debug("User logged in: {}", user);
         return ResolveResponse.redirect("/");
     }
