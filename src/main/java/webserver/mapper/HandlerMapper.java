@@ -1,5 +1,6 @@
 package webserver.mapper;
 
+import handler.Article.ArticleDao;
 import handler.Article.ArticleHandler;
 import handler.Handler;
 import handler.user.UserDao;
@@ -42,10 +43,11 @@ public class HandlerMapper {
 
     public void initialize() {
         UserDao userDao = UserDao.getInstance();
+        ArticleDao articleDao = ArticleDao.getInstance();
 
         registerController(new Handler(userDao));
         registerController(new UserHandler(userDao));
-        registerController(new ArticleHandler());
+        registerController(new ArticleHandler(userDao, articleDao));
     }
 
     private void registerController(Object controller) {
