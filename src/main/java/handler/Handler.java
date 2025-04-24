@@ -20,14 +20,9 @@ import static webserver.http.response.HttpStatusCode.CONFLICT;
 
 public class Handler {
 
-    private static final Handler instance = new Handler();
     private static final Logger logger = LoggerFactory.getLogger(Handler.class);
 
-    private Handler() {
-    }
-
-    public static Handler getInstance() {
-        return instance;
+    public Handler() {
     }
 
     @RequestMapping(method = "GET", path = "/")

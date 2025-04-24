@@ -39,7 +39,7 @@ public class HandlerMapper {
     }
 
     public void initialize() {
-        registerController(Handler.getInstance());
+        registerController(new Handler());
         registerController(new ArticleHandler());
     }
 

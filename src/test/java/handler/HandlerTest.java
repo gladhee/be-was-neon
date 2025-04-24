@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class HandlerTest {
 
+    private Handler handler;
+
     @BeforeEach
     void setUp() {
         // db 초기화 리플렉션
@@ -31,6 +33,8 @@ class HandlerTest {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
+        handler = new Handler();
     }
 
     @Test
@@ -42,7 +46,7 @@ class HandlerTest {
                 .build();
 
         // when
-        ResolveResponse<?> response = Handler.getInstance().createUser(request);
+        ResolveResponse<?> response = handler.createUser(request);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
@@ -56,10 +60,10 @@ class HandlerTest {
         HttpRequest request = RequestBuilder.post("/create")
                         .body("userId=javajigi&name=자바지기&password=password&email=javajigi%40slipp.net")
                         .build();
-        Handler.getInstance().createUser(request);
+        handler.createUser(request);
 
         // when & then
-        assertThatThrownBy(() -> Handler.getInstance().createUser(request))
+        assertThatThrownBy(() -> handler.createUser(request))
                 .isInstanceOf(HttpException.class)
                 .hasMessageContaining("409 Conflict");
     }
@@ -73,7 +77,7 @@ class HandlerTest {
                 .build();
 
         // when & then
-        assertThatThrownBy(() -> Handler.getInstance().createUser(request))
+        assertThatThrownBy(() -> handler.createUser(request))
                 .isInstanceOf(HttpException.class)
                 .hasMessageContaining("400 Bad Request");
     }
@@ -91,7 +95,7 @@ class HandlerTest {
                 .body("userId=javajigi&password=test")
                 .build();
         SessionResolver.injectSession(request);
-        ResolveResponse<?> response = Handler.getInstance().login(request, request.getSession());
+        ResolveResponse<?> response = handler.login(request, request.getSession());
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
@@ -111,7 +115,7 @@ class HandlerTest {
                 .body("userId=javajigi&password=wrongPassword")
                 .build();
         SessionResolver.injectSession(request);
-        ResolveResponse<?> response = Handler.getInstance().login(request, request.getSession());
+        ResolveResponse<?> response = handler.login(request, request.getSession());
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
@@ -131,7 +135,7 @@ class HandlerTest {
                 .body("userId=wrongUserId&password=test")
                 .build();
         SessionResolver.injectSession(request);
-        ResolveResponse<?> response = Handler.getInstance().login(request, request.getSession());
+        ResolveResponse<?> response = handler.login(request, request.getSession());
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatusCode.FOUND);
