@@ -49,7 +49,7 @@ public class Handler {
             logger.debug("User not found: {}", userId);
             return ResolveResponse.redirect("/login/login_failed.html");
         }
-        if (!user.getPassword().equals(password)) {
+        if (!user.get().isCorrectPassword(password)) {
             logger.debug("Invalid password for user: {}", userId);
             return ResolveResponse.redirect("/login/login_failed.html");
         }
