@@ -3,20 +3,20 @@
     <ul class="header__menu">
         {{#if session.user}}
         <li class="header__menu__item">
-            <a
-                    href="/users"
-                    class="btn btn_contained btn_size_s"
-            >
+            <a href="/users" class="btn btn_contained btn_size_s">
                 {{session.user.name}}님
+            </a>
+        </li>
+        <!-- 글쓰기 버튼 -->
+        <li class="header__menu__item">
+            <a href="/write" class="btn btn_contained btn_size_s">
+                글쓰기
             </a>
         </li>
         <!-- 로그아웃 버튼 -->
         <li class="header__menu__item">
             <form method="POST" action="/logout" style="display:inline;">
-                <button
-                        type="submit"
-                        class="btn btn_ghost btn_size_s"
-                >
+                <button type="submit" class="btn btn_ghost btn_size_s">
                     로그아웃
                 </button>
             </form>
