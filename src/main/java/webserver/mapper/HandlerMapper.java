@@ -1,6 +1,6 @@
 package webserver.mapper;
 
-import handler.ArticleHandler;
+import handler.Article.ArticleHandler;
 import handler.Handler;
 import webserver.annotation.RequestMapping;
 import webserver.http.common.HttpMethod;

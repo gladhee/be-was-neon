@@ -1,4 +1,4 @@
-package handler;
+package handler.Article;
 
 import model.User;
 import webserver.annotation.RequestMapping;
