@@ -1,10 +1,15 @@
 package webserver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import db.ConnectionManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import webserver.mapper.HandlerMapper;
@@ -22,7 +27,7 @@ public class WebServer {
             port = Integer.parseInt(args[0]);
         }
 
-
+        initSchema();
         SessionManager.getInstance();
         HandlerMapper handlerMapper = HandlerMapper.getInstance();
         handlerMapper.initialize();
@@ -39,4 +44,21 @@ public class WebServer {
             }
         }
     }
+
+    private static void initSchema() throws SQLException, IOException {
+        try (var conn = ConnectionManager.getConnection();
+             var stmt = conn.createStatement();
+             var is = WebServer.class.getClassLoader().getResourceAsStream("schema.sql");
+             var rd = new BufferedReader(new InputStreamReader(is))) {
+            String sql = "", line;
+            while ((line = rd.readLine()) != null) {
+                sql += line;
+                if (line.trim().endsWith(";")) {
+                    stmt.execute(sql);
+                    sql = "";
+                }
+            }
+        }
+    }
+
 }
