@@ -13,8 +13,7 @@ import webserver.util.QueryStringParser;
 import java.util.List;
 import java.util.Map;
 
-import static webserver.http.response.HttpStatusCode.BAD_REQUEST;
-import static webserver.http.response.HttpStatusCode.CONFLICT;
+import static webserver.http.response.HttpStatusCode.*;
 
 public class UserHandler {
 
@@ -50,6 +49,18 @@ public class UserHandler {
 
         model.addAttribute("itemsHtml", sb.toString());
         return "user-list";
+    }
+
+    @RequestMapping(method = "GET", path = "/users/profile")
+    public String profile(HttpSession session) {
+        logger.debug("getProfile");
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            logger.debug("User not logged in");
+            throw new HttpException(UNAUTHORIZED);
+        }
+
+        return "profile";
     }
 
     @RequestMapping(method = "POST", path = "/users")

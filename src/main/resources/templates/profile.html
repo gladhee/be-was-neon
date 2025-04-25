@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>프로필</title>
+    <link href="/reset.css" rel="stylesheet"/>
+    <link href="/global.css" rel="stylesheet"/>
+    <link href="/main.css" rel="stylesheet"/>
+    <style>
+        .profile-card {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 24px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: #fdfdfd;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-card__info {
+            margin-bottom: 24px;
+        }
+
+        .profile-card__text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background-color: #fafafa;
+            border-left: 4px solid #1976d2;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div data-include="header"></div>
+
+    <div class="page">
+        <h2 class="page-title">프로필 페이지</h2>
+
+        <section class="profile-card">
+            <div class="profile-card__info">
+                <p class="profile-card__text"><strong>이름:</strong> {{session.user.name}}</p>
+                <p class="profile-card__text"><strong>이메일:</strong> {{session.user.email}}</p>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>
