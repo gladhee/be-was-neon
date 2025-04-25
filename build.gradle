@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 java {
@@ -28,8 +29,8 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.1'
 
-    implementation 'ch.qos.logback:logback-classic:1.2.3'
     implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.11'
     testImplementation 'org.assertj:assertj-core:3.16.1'
     implementation 'com.h2database:h2:2.1.214'
 
