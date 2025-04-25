@@ -8,6 +8,14 @@ java {
     }
 }
 
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'webserver.WebServer'
+        )
+    }
+}
+
 group 'codesquad'
 version '1.0-SNAPSHOT'
 
